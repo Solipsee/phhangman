@@ -1,98 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Letter Finder Game</title>
-  <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    #letters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-    .letter-btn {
-      width: 2rem; height: 2rem;
-      display: flex; align-items: center; justify-content: center;
-      border: 1px solid #333; border-radius: 4px;
-      cursor: pointer; user-select: none;
+<h1>PokéHeroes Hangman Helper</h1>
+<div>
+Enter the hint into the box, and hit 🔍Search to get a list of possible words. The more letters you have visible, the more accurate the results will be. It is recommended to narrow down the list using vowels first (E → A → O → I → U, in that order), before using consonants.
+<br><br>
+If a letter is known to not be included within the word, add it to the blacklist, to prevent words including those letters from being suggested.
+<br><br>
+This will not make strategies for you; use your own judgement as to which letter(s) you should check next, to narrow down the results without wasting lives.
+<br><br>
+Notice: There is a known glitch regarding words appearing to not be in the database. Please copy and paste the dashes again, or guess another letter or two, as these usually fix the glitch. I didn't code this fork, I just try to keep the database up to date, so I'm unsure on how to fix this issue. - Solipse
+<br><br>
+Credit to ultravioletrayz for the Recomended Letter script
+<br><br>
+Forked from <a href="https://jsfiddle.net/b30dyj21/show">This version of Hangman Helper</a>.
+<br><br>
+ 
+Database from <a href="https://jsfiddle.net/Karasume/62vrL7ed/show">This fork</a>. </div>
+ 
+<center>
+	<input type="text" id="input">
+	<button onclick="search()">🔍Search</button>
+	<br>
+	<br>
+	Blacklist: <input type="text" id="blacklist">
+</center>
+<br>
+<p id="recletter"></p>
+<p id="results"></p>
+<p id="database"></p>
+ 
+<center>
+ 
+<body id="body">
+    <input type="button" class="changeBg" onclick="day();" value="Day" />
+    <input type="button" class="changeBg" onclick="night();" value="Night" />
+</body>
+</center>
+ 
+ 
+JavaScript
+ 
+var word = 0;
+var matchingcharacters = 0;
+var foundword = [];
+var duplicate = 0;
+var worddatabase = ["Abomasnow","Abra","Absol","Absorb Bulb","Accelgor","Acid Armor","Acro Bike","Acrobatics","Adaptability","Advanced Path","Advent Raffle Ticket","Aegislash","Aerial Ace","Aerodactyl","Aggron","Aggronite","Agility","Aguav Berry","Aipom","Air Balloon","Alakazam","Almia","Alola","Alomomola","Alpha Sapphire","Altaria","Amaura","Ambipom","Amoonguss","Ampharos","Amulet Coin","Ancient Cave","Anger Point","Anime","Anniversary Gift","Anorith","Antidote","Apicot Berry","Appletun", "Applewoodo","Applin","Apricorn","Apricorn Battle","Aqua","Araquanid","Arbok","Arcaddly","Arcanine","Arceus","Archen","Archeops","Ariados","Armaldo","Armor Fossil","Aromatherapy","Aromatisse","Aron","Arrokuda","Articuno","Ash Ketchum","Aspear Berry","Aspertia City","Attack","Attack Order","Auction","Auction House","Audino","Aura Sphere","Aurora","Aurora Beam","Aurorus","Autumn Abra","Autumn Alakazam","Autumn Flaaffy","Autumn Kadabra","Autumn Mareep","Avalugg","Avatar","Awakening","Axew","Azelf","Azumarill","Azurill","Babiri Berry","Baby Ducklett","Badge","Badge Case","Badge Set","Bagon","Baltoy","Banette","Banettenstein","Barbaracle","Barboach","Baron Fraxure","Barraskewda","Bastiodon","Battle","Battle Frontier","Battle Shop","Battle Team","Bayleef","Beach","Beachamp","Beartic","Beautifly","Beedrill","Begging","Beginner Path","Beheeyem","Beldum","Bellossom","Bellsprout", "Belue Berry","Bergmite","Berry","Berry Garden","Berrydex","Bewear","Bibarel","Bidoof","Big Mushroom","Big Nugget","Big Nuggets","Big Pearl","Big Root","Bills House","Binacle","Bisharp","Blacephalon","Black","Black Kyurem","Blast Burn","Blastoise","Blaze Kick","Blaziken","Blipbug","Blissey","Blitzle","Blossomly","Blue Flute","Blue Meteorite","Blue Orb","Bluk Berry","Bold","Boldore","Boltund","Bonemerang","Bonsly","Bouffalant","Bounsweet","Braixen","Brave Bird","Braviary","Breloom","Bright Beach","Brionne","Brock","Bronzong","Bronzor","Brown Sack","Bruxish","Bubble","Bubble Beam","Budew","Bug Gem","Bugsy","Buizel","Bulbasaur","Buneary","Bunnelby","Buried Relic","Burn Drive", "Burn Heal","Buttercream","Butterfree","Buzzwole","Cacnea","Cacophony","Cacturne","Calcium","Camerupt","Candaria","Candy","Candy Belly","Capture Rate","Carbink","Carbos","Carkol","Carnivine","Carracosta","Carvanha","Cascoon","Casteliacone","Castform","Castform Cast","Catch","Catch Rate","Catercream","Caterpie","Celadon City","Celadon City Gym","Celebi","Celesteela","Centiskorch","Cerulean City","Cerulean Gym","Champion","Champion Alder","Champion Cynthia","Champion Diantha","Champion Steven","Champion Wallace","Chandelure","Chansey","Charizard","Charjabug","Charmander","Charmeleon","Charti Berry","Chatot","Chatquiz","Chef","Cheri Berry","Cherrim","Cherubi","Chesnaught","Chespin","Chesto Berry","Chewtle","Chikorita","Chilan Berry","Chill Drive","Chimchar","Chimecho","Chinchou","Chingling","Chocoluv","Chople Berry","Cilan","Cinccino","Cinderace","Clair","Clamperl","Clauncher","Claw Fossil","Clawfa","Clawfairy","Clawitzer","Claydol","Clefable","Clefairy","Cleffa","Clicklist","Clobbopus","Cloyster","Coalossal","Coba Berry","Cobalion","Cocktaillon","Cofagrigus","Coinflip","Colbur Berry","Cold Castform","Combee","Combowsken","Combusken","Comfey","Community","Concentration","Conkeldurr","Constrict","Contest","Contrary","Coocoot","Cornn Berry","Corphish","Corsola","Corviknight","Corvisquire","Cosmoem","Cosmog","Cosmoneon","Cosplay Pikachu","Cottonblu","Cottonee","Cover Fossil","Crabhammer","Crabominable","Crabrawler","Cradily","Cramorant","Cranidos","Crawdaunt","Cresselia","Croagunk","Crobat","Croconaw","Crustle","Cryogonal","Crystal Aggron","Crystal Aron","Crystal Crossing","Crystal Lairon","Cubchoo","Cubone","Cuddlithe","Current Weather","Curse","Cursed Rapidash","Cursola","Custap Berry","Cutiefly","Cyndaquil","Cynthia", "Daily Reward","Dark Castform","Dark Gem","Dark Orb","Dark Ponyta","Darkrai","Darmanitan","Dartrix","Darumaka","Database","Dawn Stone","Day Care","Daycare","Daycare Man","Daycare Owner","Dazzling Gleam","Decidueye","Dedenne","Deep Sea Scale","Deep Sea Tooth","Deepseascale","Deepseatooth","Defense","Deino","Delcatty","Delibird","Delivery","Delphox","Deoxys","Derpatung","Desolate Land","Dewgong","Dewott","Dewpider","Dex Rotom","Dhelmise","Dialga","Diancie","Diggersby","Diglett","Dire Hit","Dirndltank","Discharge","Discount Coupon","Disguised Exeggcute","Distortion World","Ditto","Dodrio","Doduo","Dome Fossil","Donphan","Doom Desire","Dottler","Doublade","Double Slap","Douse Drive","Dowsing Machine","Dowsing Mchn","Dr Crazee","Dr Honch","Draco Meteor","Draco Plate","Dragalge","Dragon","Dragon Ascent","Dragon Dance","Dragon Gem","Dragon Rage","Dragon Rush","Dragon Scale","Dragon Type","Dragonair","Dragonite","Draining Kiss","Dralucha","Drampa","Drapion","Dratini","Dread Plate","Dream Ball","Dream Point","Dream World","Dream World Shop","Drednaw","Drenched Bluff","Drifblim","Driflamp","Drifloon","Drilbur","Drill Rotom","Drizzile","Drowzee","Druddigon","Dubious Disc","Dubwool","Ducklett","Dugtrio","Dungeon","Dunsparce","Duosion","Durant","Durin Berry","Dusclops","Dusk Stone","Dusknoir","Duskull","Dustox","Dwebble","Earth Plate","Earthquake","Easter Buneary","Easter Bunnelby","Easter Diggersby","Easter Egg","Easter Egg Hunt","Easter Eggs","Easter Event","Easter Hunt","Easter Lopunny","Easter Slaking","Easter Slakoth","Easter Swanna","Eclipseon","Eclipsode","Eelektrik","Eelektross","Eevee","Egg Group","Egg Hunt","Egg Radar","Egg Radar Chip","Egg Storage","Eggdex","Eiscue","Ekans","Eldegoss","Electabuzz","Electirizer","Electivire","Electric","Electric Gem","Electrike","Electrode","Elekid", "Element","Elgyem", "Elite Four","Elite Four Drake","Elite Four Glacia","Elite Four Phoebe","Ember","Emboar","Emera","Emera Bank","Emera Beach","Emera Mall","Emera Square","Emera Town","Emerald","Emolga","Empoleon","Endless Path","Enigma Berry","Enigma Pearl","Enigma Stone","Entei","Eon Ticket","Escavalier","Espeon","Espurr","Eternal Tower","Ether","Event","Event Distribution","Event Egg", "Event Pass","Event Pokemon","Event Shop","Ever Grande City","Everstone","Eviolite","Evolution","Excadrill","Exeggcute","Exeggutor","Exp Share","Explorer Bag","Explorer Kit","Exploud","Fainted","Fairy","Fairy Gem","Falinks","Fan Rotom","Fashion Case","Fearow","Feebas","Fennekin","Feraligatr","Ferrerocoal","Ferroseed","Ferrothorn","Festival Gardevoir","Festival Ralts","Fiery Furnace","Fiesta Larvesta","Fiesta Volcarona","Fighting Gem","Figy Berry","Finneon","Fiore","Fire Blast","Fire Fang","Fire Gem","Fire Punch","Fire Stone","Fire Type","Fishing","Fist Plate","Flaaffy","Flame Orb","Flame Plate","Flame Thrower","Flame Wheel","Flamethrower","Flapple","Flare","Flare Blitz","Flareon","Flash","Flash Fire","Fletchinder","Fletchling","Floatzel","Flower Boy","Flower Girl","Flygon","Flying","Flying Gem","Foggy Castform","Fomantis","Foongus","Forretress","Forum","Forum Thread","Fossil","Fraxure","Frenzy Plant","Friendship","Frillish","Froakie","Frogadier","Froslass","Frosmoth","Frost Rotom","Frosty Kecleon","Frozen","Frustration","Full Potion","Furfrou","Furret","Fury Cutter","Fury Swipes","Gabite","Galar","Gallade","Galvantula","Gambling","Game Center","Game Chip","Game Chips","Game Freak","Gameboy","Gameboy Advance","Gamecenter","Gametime","Gaming","Ganlon Berry","Garbodor","Garchomp","Gardevoir","Gary Oak","Gastly","Gem Cauldron","Gem Collector","Gem Exchange","Gemcauldron","Gemexchange","Generation","Genesect","Gengar","Geodude","Geomancy","Ghetsis","Ghost","Ghost Gem","Gible","Giga Appletun","Giga Blastoise","Giga Charizard","Giga Coalossal","Giga Drednaw","Giga Eevee","Giga Flapple","Giga Garbodor","Giga Gengar","Giga Hatterene","Giga Impact","Giga Kingler","Giga Lapras","Giga Machamp","Giga Melmetal","Giga Meowth","Giga Orbeetle","Giga Pikachu","Giga Snorlax","Giga Venusaur","Gigalith","Gingergoat","Girafarig","Giratina","Giratina Quest","Glaceon","Glaciate","Glacier Palace","Glalie","Glameow","Gligar","Gliscor","Glitch","Glitch City","Global Trade Station","Gloom","Gloweon","Gogoat","Golbat","Goldeen","Golden Game Chip","Golden Game Chips","Golden Pokeball","Golden Slot","Golduck","Golem","Golett","Golisopod","Golurk","Gomaseel","Goodra","Goomy","Gooseboarder","Gorebyss","Gossifleur","Gothita","Gothitelle","Gothorita","Gourgeist","Gracidea","Gracidea Flower","Granbull","Grapploct","Grass","Grass Gem","Graveler","Great Ball","Greedent","Green Orb","Greninja","Grepa Berry","Grimer","Grimmsnarl","Griseous Orb","Grookey","Groomicott","Grotle","Groudon","Ground","Ground Gem","Grovyle","Growl","Growlithe","Grubbin","Grumpig","Gulpin","Gumshoos","Gurdurr","Gusty Castform","Guzzlord","Gyarados","Gym Badge","Haban Berry","Hakamo O","Halloween Sweets","Hangman","Happiny","Harden","Hariyama","Harvest","Harvest Sprite","Hashtag","Hatch","Hatenna","Hatterene","Hattrem","Haunter","Hawlucha","Haxorus","Hazy Pass","Heal Order","Heart Scale","Heartomb","Heat Castform","Heat Rotom","Heatmor","Heatran","Heliolisk","Helioptile","Helix Fossil","Helper","Helping Hand","Heracross","Herdier","Herochat","Herowalker","Hidden Ability","Hidden Power","Higher Or Lower","Hippopotain","Hippopotas","Hippowdon","Hippowtain","Hitmonchan","Hitmonlee","Hitmontop","Hoenn","Hoenn Certificate","Hoggy","Honchkrow","Hondew Berry","Honedge","Honey","Honey Jar","Honey Tree","Honeycomb","Honeycombs","Honeytree","Hoothoot","Hoppip","Horsea","Houndoom","Houndour","Huntail","Hydreigon","Hydro Cannon","Hydro Pump","Hyper Beam","Iapapa Berry","Ice Beam","Ice Cream Cornet","Ice Gem","Ice Heal","Ice Punch","Ice Shard","Icicle Plate","Igglybath","Igglybuff","Ikkakugong","Illumise","Illusion","Impasta","Impidimp","Impish","Incineroar","Indigo League","Infernape","Inkay","Insect Plate","Inteleon","Interact","Interaction","Interactions","Iron Defense","Iron Plate","Iron Tail","Item Bag","Item Delivery","Item Shop","Ivysaur","Jaboca Berry","Jade Orb","James","Jangmo O","Jaw Fossil","Jellicent","Jesterig","Jigglybath","Jigglypuff","Jirachi","Johto","Johto Certificate","Jolly Jr", "Jolteon","Joltik","Judgement","Jumpluff","Juniper","Jynx","Kabuto","Kabutops","Kadabra","Kakuna","Kalos","Kalos Certificate","Kangaskhan","Kanto","Kanto Certificate","Kanto League","Karrablast","Kartana","Kasib Berry","Kebia Berry","Kecleon","Kee Berry","Keggleon","Keldeo","Kelpsy Berry","Ketchum","Key Stone","Kinesis","Kingdra","Kingler","Kirlia","Klang","Klefki","Kleopard","Klink","Klinklang","Knight Axew","Koffing","Komala","Kommo O","Krabby","Kricketot","Kricketune","Krokorok","Krookodile","Kyogre","Kyurem","Lairon","Lake Trio","Lake Valor","Lampent","Lance","Landorus","Lansat Berry","Lanturn","Lapras","Large Candy Bag","Larvesta","Larviprop","Larvitar","Latias","Latiasite","Latios","Lava Cookie","Lavender Town","Leaf Stone","Leafeon","Leavanny","Ledian","Ledyba","Leech Life","Leftovers","Legend","Legendary","Legendary Dogs","Lemonade","Leppa Berry","Lepreowth","Level","Lickilicky","Lickitung","Liechi Berry","Liepard","Light Ball","Light Rock","Light Screen","Light Stone","Lightblim","Lightstone Cave","Lileep","Lillibride","Lilligant","Lillipup","Link Cable","Linoone","Litleo","Litten","Littleroot Town","Litwick","Lombre","Lopunny","Lord Salamance","Lord Salamence","Los Seashellos","Lotad","Lottery","Loudred","Lovemeter","Lucario","Lucario Sensei","Lucarionite","Ludicolo","Lugia","Lum Berry","Lumiday","Lumineon","Lunala","Lunar Wing","Lunatone","Lurantis","Luvdisc","Luxio","Luxray","Mach Bike","Machamp","Machine Part","Machoke","Machop","Machotide","Magcargo","Magical Leaf","Magikarp","Magmar","Magmarizer","Magmortar","Magnemite","Magneton","Magnezone","Mago Berry","Magost Berry","Makuhita","Malamar","Mamoswine","Manaphy","Mandibuzz","Manectric","Maneki Espurr","Mankey","Mantine","Mantyke","Maractus","Maranga Berry","Mareanie","Mareep","Marill","Marine Cave","Marowak","Marshadow","Marshtomp","Masquerain","Master","Master Ball","Masuda","Mawile","Max Repel","Meadow Plate","Medal Rally","Medicham","Meditite","Mega Able","Mega Aggron","Mega Alakazam","Mega Ampharos","Mega Audino","Mega Banette","Mega Beedrill","Mega Blastoise","Mega Braviary","Mega Camerupt","Mega Charizard","Mega Claydol","Mega Crobat","Mega Diancie","Mega Dunsparce","Mega Easter Lopunny","Mega Evolution","Mega Flygon","Mega Froslass","Mega Gallade","Mega Garchomp","Mega Gardevoir","Mega Gengar","Mega Giratina","Mega Glalie","Mega Gyarados","Mega Lopunny","Mega Luxray","Mega Manectric","Mega Mawile","Mega Medicham","Mega Meganium","Mega Mewtwo","Mega Mewtwo X","Mega Milotic","Mega Pidgeot","Mega Pinsir","Mega Pokemon","Mega Rapidash","Mega Rayquaza","Mega Ring","Mega Sableye","Mega Salamence","Mega Sceptile","Mega Scizor","Mega Sharpedo","Mega Skarmory","Mega Steelix","Mega Stone","Mega Swampert","Mega Tyranitar","Mega Venusaur","Mega Yorebro","Meganium","Melmetal","Meloetta","Meltan","Meltan Candy","Meowstic","Meowth","Mesprit","Metacream","Metagross","Metal Coat","Metang","Metapod","Meteorite Castform","Metronome","Mew","Mewton M Meowth","Mewtwo","Mewtwonite Y","Micle Berry","Mienfoo","Mienshao","Mightyena","Mikofoo","Mikoshao","Milker","Milotic","Miltank","Mime Jr","Mimic","Mimikyu","Minccino","Mind Plate","Minun","Misc Settings","Misdreavus","Misdreavus Cosplay","Mismagius","Missingno","Mission","Misty","Mixer Rotom","Moderators","Moltres","Monferno","Monitor Rotom","Moomoo Milk","Moomoo Ranch","Moon Stone","Morelull","Morgrem","Mossdeep City","Mossy Forest","Mothim","Mouse","MowRotom","Mr Bagon","Mr Mime","Mr Moody","Mt Moon","Mt Silver","Mudbray","Mudkip","Mudsdale","Muggy","Muggy Castform","Muk","Munchlax","Munna","Murkrow","Musharna","Mushroom","Mysterious Tree","Mystery Box","Mystery Dungeon","Mystery Egg","Mystery Key","Naganadel","Nanab Berry","Nappy","Narichu","Naruchu","Natu","Nature","Nessy","New Bark Town","Nickit","Nidoking","Nidoqueen","Nidorina","Nidorino","Night Slash","Nightmare Munna","Nihilego","Nincada","Ninetales","Ninjask","Nintendo","Nintendo Ds","Nocnoc","Noctowl","Noibat","Noivern","Nomel Berry","Normal","Normal Gem","Nosepass","Nosepharos","Notification","Notification Wall","Nugget","Numel","Nurse Joy","Nuvema Town","Nuzleaf","Oblivion Wing","Obstagoon","Occa Berry","Octazooka","Octillery","Odd Incense","Oddish","Officer Jenny","Old Amber","Old Amber Fossil","Omanyte","Omastar","Omega","Omega Ruby","Ominous Wind","Onix","Oran Berry","Orange Islands","Oranguru","Orbeetle","Oshawott","Oval Stone","Overheat","Pachirisnow","Pachirisu","Pal Pad","Palkia","Pallet Town","Palossand","Palpad","Palpitoad","Pamtre Berry","Pancham","Pangoro","Panpour","Pansage","Pansear","Paralysis","Paralyze Heal","Paralyzed","Paras","Parasect","Party","Pass Orb","Passho Berry","Passimian","Patrat","Pawniard","Payapa Berry","Pearl","Pecha Berry","Pelipper","Perchaun","Permanent Ban","Perrserker","Persian","Persim Berry","Petal Dance","Petaya Berry","Petilil","Phanpy","Phantump","Pharraloin","Pheromosa","Phione","Pichu","Pickup","Pidgeot","Pidgeotto","Pidgey","Pidove","Pignite","Pika Pika","Pikachu","Pikipek","Piloswine","Pinap Berry","Pineco","Pinsir","Piplup","Pixie Plate","Plaguekrow","Playground","Plume Fossil","Plushie","Plusle","Pocket Monsters","Poipole","Poison","Poison Gem","Poke Ball","Pokeball","Pokeblock","Pokedex","Pokedollar","Pokegear","Pokehero","Pokeheroes","Pokeheroes Wiki","Pokemon","Pokemon Amie","Pokemon League","Pokemon Master","Pokemon Movie","Pokemon Ranger","Pokeradar","Pokeradar Chain","Pokerus","Pokewalker","Pokeworld","Polestar","Politoed","Poliwag","Poliwhirl","Poliwrath","Poll Manager","Pomeg Berry","Ponyta","Poochyena","Popplio","Porygon","Potion","Power Anklet","Power Band","Power Belt","Power Bracer","Power Lens","Power Weight","Primal","Primal Groudon","Primal Kyogre","Primal Reversion","Primarina","Primeape","Primordial Sea","Princess Smoochum","Prinplup","Prism Scale","Prison Bottle","Privacy Policy","Private Message","Prize Exchange","Pro Path","Probolight","Probopass","Prof Birch","Prof Madno","Prof Rowan","Prof Rowans Lab","Professor","Professor Birch","Professor Oak","Professor Rowan","Protector","Protein","Psychic","Psychic Gem","Psyduck","Pumpkaboo","Pumple","Pupibot","Pupitar","Purrloin","Purugly","Puzzle","Puzzle Collection","Pyroar","Pyukumuku","Quagschnee","Quagsire","Qualot Berry","Queen Jynx","Quest","Quick Attack","Quick Ball","Quilava","Quilladin","Qwilfish","Raboot","Rabuta Berry","Radio Tower","Raffle","Raichu","Raikou","Rain Badge","Rain Dance","Rainbow Castform","Rainbow Wing","Rainy Castform","Raitoshi","Raizumaki","Ralts","Rambo Rumble","Rampardos","Ranklist","Rapidash","Rare Bone","Rare Candy","Rarity","Raticate","Rattata","Rawst Berry","Raylong","Rayquaza","Razor Claw","Razor Fang","Razor Leaf","Razz Berry","Reaper Cloth","Red Lunar Wing","Red Meteorite","Red Orb","Regice","Regigigas","Regirock","Registeel","Relic Band","Relic Copper","Relic Crown","Relic Gold","Relic Silver","Relic Statue","Relic Vase","Relicanth","Remakes","Remoraid","Rescue","Reshiram","Resolute Stone","Retro","Retro Starters","Reuniclus","Revive","Rhydon","Rhyhorn","Rhyperior","Ribombee","Rillaboom","Rindo Berry","Riolu","Rival","Roar Of Time","Robin Blaze","Rock Blast","Rock Gem","Rockruff","Rocky Cave","Rodeo Scraggy","Roggenrola","Rokkyu","Roleplay","Rolycoly","Rookidee","Root Fossil","Roseli Berry","Roselia","Roserade","Rotom","Round","Route","Rowan","Rowap Berry","Royal","Royal Tunnel","Ruby Valley","Rudolph","Rufflet","Rules","Rumble","Rumble Area","Rumble Mission","Rumble Missions","Rumbling","Run Away","Rusted Shield","Rusted Sword","Sableye","Sachet","Sacred Ash","Sad Jr","Safari","Safari Ball","Safari Zone","Sail Fossil","Sala Da Menci","Salac Berry","Salamence","Salandit","Salazzle","Salon","Samurott","Sandaconda","Sandcrustle","Sandile","Sandshrew","Sandslash","Sandstorm","Sandwebble","Sandygast","Santa Birb","Santa Bird","Sapphire","Satochu","Sawk","Scanner","Scary Glasses","Scatterbug","Scattercube","Sceptile","Scizor","Scolipede","Scope Lens","Scorbunny","Scrafty","Scraggy","Scyther","Seadra","Seaking","Sealeo","Seatran","Secret Base","Seed Bomb","Seedot","Seel","Seismitoad","Seller Clothes","Selunar","Sentret","Serena","Serperior","Servine","Settings","Seviper","Sewaddle","Shadow Lugia","Shadow Mewtwo","Sharpedo","Shaymin","Shaysola","Shedinja","Shelgon","Shell Bell","Shellder","Shelmet","Shieldon","Shiftry","Shiinotic","Shinies","Shinx","Shiny","Shiny Chaining","Shiny Charm","Shiny Ditto","Shiny Hunt","Shiny Sprite","Shiny Stone","Shipping","Shoal Shell","Shock Drive","Shroomish","Shuca Berry","Shuckle","Shuppet","Sigilyph","Silcoon","Silent Forest","Silicobra","Silph Co","Silvally","Silver Wing","Simipour","Simisage","Simisear","Sinnoh","Sinnoh Certificate","Sir Haxelot","Sir Shelgon","Sitrus Berry","Sizzlipede","Skarmory","Skiddo","Skiploom","Skitty","Skorupi","Skrelp","Skugar","Skull Fossil","Skuntank","Skwovet","Sky Pillar","Sky Plate","Sky Uppercut","Slaking","Slakoth","Sliggoo","Slow Start","Slowbro","Slowking","Slowpoke","Slowpoketail","Slowyore","Slugma","Slurpuff","Small Nugget","Smeargle","Smog Castform","Smoochum","Sneasel","Snivy","Snom","Snorlax","Snorunt","Snover","Snowbuck","Snowling","Snowy Castform","Snowy Mountains","Snubbull","Sobble","Soda Pop","Solar Beam","Solastra","Solgaleo","Solgilyph","Solorb","Solosis","Solrock","Soothe Bell","Space Spinda","Spear Pillar","Spearow","Speed Click","Spelon Berry","Spewbrella","Spewpa","Spheal","Spinarak","Spinda","Spiritomb","Splash Plate","Spoink","Spooky Manor","Spooky Plate","Spore","Spray Duck","Sprayduck","Spring Ampharos","Spring Flaaffy","Spring Mareep","Spring Update","Sprite","Spriter","Spritzee","Sproutlett","Sproutrio","Squirtle","Ss Anne","Ss Aqua","Ss Tidal","Staff","Staid","Stakataka","Stantler","Star Piece","Staraptor","Staravia","Stardust","Starf Berry","Starly","Starmie","Starter","Starters","Staryu","Steam Eruption","Steamo","Steel Gem","Steelix","Steenee","Steven","Steven Stone","Stone Plate","Stoutland","Strength","String Shot","Strong Earthquakes","Struggle","Stufful","Stunfisk","Stunky","Sudowoodo","Sugar Shock","Suggest A Word","Suicune","Summer Ampharos","Summer Flaaffy","Summer Mareep","Summon","Sun Stone","Sunflora","Sunkern","Sunny Castform","Super Breloomio","Super Honey","Super Rod","Super Shroom","Super Training","Surfer Machop","Surfing Pikachu","Surskit","Swablu","Swadloon","Swagger","Swalot","Swampert","Swampras","Swanna","Sweet Heart","Swellow","Swelluhodo","Swift","Swinub","Swirlix","Swoobat","Swords Dance","Sylveon","Synchronize","Tackle","Tail Whip","Taillow","Tailluchi","Tall Grass","Talonflame","Tamato Berry","Tanga Berry","Tangela","Tanghetti","Tangrowth","Tapu Bulu","Tapu Fini","Tapu Koko","Tapu Lele","Tauros","Team Aqua","Team Flare","Team Magma","Team Plasma","Team Rocket","Technical Machine","Teddiursa","Telepathy","Tendenne","Tentacool","Tentacruel","Tepig","Terra Cave","Terrakion","Teslagon","Thievul","Throh","Thunder Punch","Thunderbolt","Thundershock","Thunderstone","Thunderstorm","Thundurus","Thwackey","Timburr","Timid","Tiny Mushroom","Tinymushroom","Tirtouga","Togedemaru","Togekiss","Togepi","Togetic","Tom Nook","Toraros","Torcharch","Torchic","Torkoal","Tornadus","Torracat","Torterra","Totodile","Toucannon","Toxapex","Toxel","Toxic","Toxic Orb","Toxic Plate","Toxicroak","Trade","Trading","Trainer","Trainer Red","Trainerlevel","Trainerpoint","Trainerpoints","Training","Tranquill","Trapinch","Treasure","Treasure Hunt","Treecko","Trevenant","Tropius","Truant","Trubbish","Trumbeak","Tsareena","Tunnel","Turtonator","Turtwig","Twinleaf Town","Tympole","Tynamo","Type Null","Types","Typhlosion","Tyranitar","Tyrantrum","Tyrogue","Tyrunt","Ultra Ball","Ultra Beast","Umbreon","Undiscovered","Unfezant","Union Cave","Union Room","Unova","Unova Certificate","Unown","Unown Flake","Uproar","Ursaring","Userlist","Username","Users","Uxie","Valenfloon","Valentine","Van Bagon","Vanillish","Vanillite","Vanilluxe","Vaniville Town","Vaporeon","Venipede","Venomoth","Venonat","Venoshock","Venusaur","Vespiquen","Vibrava","Victini","Victreebel","Vigoroth","Vikavolt","Vileplume","Vine Whip","Viridian City","Virizion","Vitamin","Vivillon","Volbeat","Volcarona","Volkner","Volt Absorb","Volt Switch","Volt Tackle","Voltorb","Vs Seeker","Vullaby","Vulpix","Wacan Berry","Wailmer","Wailmer Pail","Wailord","Wally","Walrein","Wartortle","Wash Rotom","Watchog","Water","Water Gem","Water Gun","Water Stone","Watmel Berry","Weather","Weather Balloon","Weather Channel","Weather Forecast","Weavile","Weedle","Weepinbell","Weezing","Wepear Berry","Whimsicott","Whipped Dream","Whirlipede","Whiscash","Whismur","White Hand","White Kyurem","Wide Lens","Wigglybath","Wigglytuff","Wiki Berry","Wimpod","Windy Castform","Windy Prairie","Wingull","Winter Camerupt","Winter Numel","Wishiwashi","Witch Vulpix","Wobbuffet","Wonder Guard","Wonder Trade","Wonder Trade Station","Woobat","Wood Hammer","Wooloo","Wooper","Woopice","Wreafki","Wurmple","Wynaut","X Attack","X Defense","X Speed","Xatu","Xerneas","Xurkitree","Yache Berry","Yamask","Yamper","Yanma","Yanmega","Yellow Forest","Yellow Meteorite","Yorebro","Yoreking","Yungoos","Yveltal","Zacian","Zamazenta","Zangoose","Zap Cannon","Zap Plate","Zapdos","Zebstrika","Zekrom","Zenith Marshadow","Zeraora","Zero Isle","Zigzagoon","Zombeagle","Zomppet","Zoroark","Zorua","Zubat","Zweilous","Zweipunk","Zygarde"];
+ 
+search = function() {
+  word = document.getElementById('input').value;
+  blacklist = document.getElementById('blacklist').value;
+  foundword = [];
+  knownletters = [];
+  blacklistedletters = [];
+  recLetter = 'A';
+  recAmount = 0;
+  alphabetAmounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+ 
+  for (var i = 0; i < word.length; i++) {
+    if (word[i] !== "_") {
+      knownletters.push(word[i]);
     }
-    .letter-btn.selected { background: #333; color: #fff; }
-    #results { margin-top: 1rem; }
-    #results ul { padding-left: 1.2rem; }
-  </style>
-</head>
-<body>
-
-  <h1>Word Finder</h1>
-  <p>Click letters to filter your private word bank:</p>
-
-  <div id="letters"></div>
-  <button id="clear">Clear Selections</button>
-
-  <div id="results">
-    <h2>Matching Words:</h2>
-    <ul id="word-list"></ul>
-  </div>
-
-  <script>
-    // === Your private word bank: add or remove words here ===
-    const WORD_BANK = [
-      'apple', 'banana', 'grape', 'orange',
-      'strawberry', 'watermelon', 'kiwi', 'mango',
-      'blueberry', 'pineapple', 'apricot', 'peach'
-    ];
-
-    // State: which letters are currently selected
-    let selected = new Set();
-
-    const lettersDiv = document.getElementById('letters');
-    const wordList = document.getElementById('word-list');
-    const clearBtn = document.getElementById('clear');
-
-    // 1) Render A–Z buttons
-    for (let i = 65; i <= 90; i++) {
-      const ch = String.fromCharCode(i);
-      const btn = document.createElement('div');
-      btn.textContent = ch;
-      btn.className = 'letter-btn';
-      btn.addEventListener('click', () => {
-        if (selected.has(ch)) {
-          selected.delete(ch);
-          btn.classList.remove('selected');
-        } else {
-          selected.add(ch);
-          btn.classList.add('selected');
+  }
+ 
+  for (var i = 0; i < blacklist.length; i++) {
+    blacklistedletters.push(blacklist[i]);
+  }
+ 
+  for (var i = 0; i < worddatabase.length; i++) {//search through the possible words
+    matchingcharacters = 0;
+    invalidcharacters = 0;
+    blacklistedcharacters = 0;
+ 
+    for (var j = 0; j < word.length; j++) {//for the givven word search through the individual letters
+      if ((word[j] == " " && worddatabase[i][j] == " ") || (word[j] == "_" && worddatabase[i][j] != " ") || worddatabase[i][j].toUpperCase() == word[j].toUpperCase()) {
+        for (var k = 0; k < knownletters.length; k++) {
+          if (word[j] == "_" && worddatabase[i][j].toUpperCase() == knownletters[k].toUpperCase()) {
+            invalidcharacters++;
+          }
         }
-        updateResults();
-      });
-      lettersDiv.appendChild(btn);
-    }
-
-    // 2) Clear selection
-    clearBtn.addEventListener('click', () => {
-      selected.clear();
-      document.querySelectorAll('.letter-btn.selected')
-              .forEach(b => b.classList.remove('selected'));
-      updateResults();
-    });
-
-    // 3) Filter and display matching words
-    function updateResults() {
-      const sel = Array.from(selected).map(l => l.toLowerCase());
-      wordList.innerHTML = '';
-      const matches = WORD_BANK.filter(word =>
-        sel.every(letter => word.includes(letter))
-      );
-      if (matches.length === 0) {
-        wordList.innerHTML = '<li><em>No matches</em></li>';
-      } else {
-        matches.forEach(w => {
-          const li = document.createElement('li');
-          li.textContent = w;
-          wordList.appendChild(li);
-        });
+ 
+        for (var k = 0; k < blacklistedletters.length; k++) {
+          if (worddatabase[i][j].toUpperCase() == blacklistedletters[k].toUpperCase()) {
+            blacklistedcharacters++;
+          }
+        }
+ 
+        if (invalidcharacters == 0 && blacklistedcharacters == 0) {
+          matchingcharacters++;
+        }
+      }
+ 
+      if (worddatabase[i].length !== word.length) {
+        j = word.length;
       }
     }
-
-    // Initial render
-    updateResults();
-  </script>
-
-</body>
-</html>
+ 
+    if (worddatabase[i].length !== word.length) {
+      matchingcharacters = 0;
+    }
+ 
+    if (matchingcharacters == word.length) {
+      foundword.push(" " + worddatabase[i]);
+ 
+      for(var l = 0;l<worddatabase[i].length;l++)
+      {
+      	var tempLetter = worddatabase[i][l].toUpperCase();
+      	alphabetAmounts[tempLetter.charCodeAt(0)-65]++;
+        var known = false;
+        for (var t = 0; t < knownletters.length; t++) {
+          if (tempLetter == knownletters[t].toUpperCase()) {
+            known = true;
+          }
+        }
+        if(alphabetAmounts[tempLetter.charCodeAt(0)-65]>recAmount&&!known)
+        {
+ 
+        	recAmount = alphabetAmounts[tempLetter.charCodeAt(0)-65];
+          recLetter = tempLetter;
+        }
+      }
+    }
+  }
+ 
+ 
+  if (foundword == "") {
+    document.getElementById("results").innerHTML = "Nothing was found";
+  } else {
+    document.getElementById("results").innerHTML = "Possible words:" + foundword + ".";
+     document.getElementById("recletter").innerHTML = "Recommended letter: " + recLetter;
+  }
+}
+ 
+document.getElementById("database").innerHTML = "[" + worddatabase.length + "/1919" + " Words In Helper]";
+ 
+function day() {
+  body.className = "lightSwitch";
+};
+ 
+function night() {
+  body.className = "darkSwitch";
+};
+ 
+$(function() {
+  var bgColor = document.cookie.replace(/(?:(?:^|.*;\s*)bgColor\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+ 
+  var button = $('input[type=button].changeBg');
+  button.on('click', function(event) {
+    event.preventDefault();
+ 
+    eval($(this).val().toLowerCase() + "();");
+ 
+    button.not($(this)).removeAttr('disabled');
+    if ($(this).val() != "Reset") {
+      $(this).attr('disabled', '');
+      document.cookie = "bgColor=" + $(this).val();
+    }
+  });
+ 
+  if (bgColor.length > 0) {
+    eval(bgColor.toLowerCase() + '()');
+    $.each($('input[type="button"].changeBg'), function() {
+      if ($(this).val() == bgColor)
+        $(this).attr('disabled', 'disabled');
+    });
+  }
+});
+ 
+ 
+CSS
+ 
+button {
+  border-radius: 4px;
+  cursor: pointer;
+}
+ 
+h1 {
+  text-align: center;
+}
+ 
+p {
+  text-align: center;
+}
+ 
+.darkSwitch {
+  background: #000000;
+  color:#ffffff;
+}
+ 
+.lightSwitch {
+  background: #ffffff;
+  color:#000000;
+}
