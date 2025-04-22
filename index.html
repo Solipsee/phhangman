@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Letter Finder Game</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    #letters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .letter-btn {
+      width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #333; border-radius: 4px;
+      cursor: pointer; user-select: none;
+    }
+    .letter-btn.selected { background: #333; color: #fff; }
+    #results { margin-top: 1rem; }
+    #results ul { padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Word Finder</h1>
+  <p>Click letters to filter your private word bank:</p>
+
+  <div id="letters"></div>
+  <button id="clear">Clear Selections</button>
+
+  <div id="results">
+    <h2>Matching Words:</h2>
+    <ul id="word-list"></ul>
+  </div>
+
+  <script>
+    // === Your private word bank: add or remove words here ===
+    const WORD_BANK = [
+      'apple', 'banana', 'grape', 'orange',
+      'strawberry', 'watermelon', 'kiwi', 'mango',
+      'blueberry', 'pineapple', 'apricot', 'peach'
+    ];
+
+    // State: which letters are currently selected
+    let selected = new Set();
+
+    const lettersDiv = document.getElementById('letters');
+    const wordList = document.getElementById('word-list');
+    const clearBtn = document.getElementById('clear');
+
+    // 1) Render A–Z buttons
+    for (let i = 65; i <= 90; i++) {
+      const ch = String.fromCharCode(i);
+      const btn = document.createElement('div');
+      btn.textContent = ch;
+      btn.className = 'letter-btn';
+      btn.addEventListener('click', () => {
+        if (selected.has(ch)) {
+          selected.delete(ch);
+          btn.classList.remove('selected');
+        } else {
+          selected.add(ch);
+          btn.classList.add('selected');
+        }
+        updateResults();
+      });
+      lettersDiv.appendChild(btn);
+    }
+
+    // 2) Clear selection
+    clearBtn.addEventListener('click', () => {
+      selected.clear();
+      document.querySelectorAll('.letter-btn.selected')
+              .forEach(b => b.classList.remove('selected'));
+      updateResults();
+    });
+
+    // 3) Filter and display matching words
+    function updateResults() {
+      const sel = Array.from(selected).map(l => l.toLowerCase());
+      wordList.innerHTML = '';
+      const matches = WORD_BANK.filter(word =>
+        sel.every(letter => word.includes(letter))
+      );
+      if (matches.length === 0) {
+        wordList.innerHTML = '<li><em>No matches</em></li>';
+      } else {
+        matches.forEach(w => {
+          const li = document.createElement('li');
+          li.textContent = w;
+          wordList.appendChild(li);
+        });
+      }
+    }
+
+    // Initial render
+    updateResults();
+  </script>
+
+</body>
+</html>
